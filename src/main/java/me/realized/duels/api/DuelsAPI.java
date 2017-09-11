@@ -4,6 +4,7 @@ import me.realized.duels.Core;
 import me.realized.duels.data.UserData;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -21,23 +22,20 @@ public class DuelsAPI {
     /**
      * @param uuid - UUID of the player to get userdata.
      *
-     * @param force - Should we force the load from the files?
-     *
      * @return UserData of the player if exists or null.
      */
-    public static UserData getUser(UUID uuid, boolean force) {
-        return instance.getDataManager().getUser(uuid, force);
+    public static Optional<UserData> getUser(UUID uuid) {
+        return instance.getDataManager().getUser(uuid);
     }
 
     /**
-     * @param player - player to get userdata.
      *
-     * @param force - Force the load from the files if not in cache?
+     * @param player - player to get userdata.
      *
      * @return UserData of the player if exists or null.
      */
-    public static UserData getUser(Player player, boolean force) {
-        return instance.getDataManager().getUser(player.getUniqueId(), force);
+    public static Optional<UserData> getUser(Player player) {
+        return instance.getDataManager().getUser(player.getUniqueId());
     }
 
     /**

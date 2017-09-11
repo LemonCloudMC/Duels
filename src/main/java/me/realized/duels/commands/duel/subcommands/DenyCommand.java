@@ -9,6 +9,8 @@ import me.realized.duels.utilities.Helper;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Optional;
+
 public class DenyCommand extends SubCommand {
 
     public DenyCommand() {
@@ -24,9 +26,10 @@ public class DenyCommand extends SubCommand {
             return;
         }
 
-        UserData data = dataManager.getUser(target.getUniqueId(), false);
 
-        if (data == null) {
+        Optional<UserData> data = dataManager.getUser(target.getUniqueId());
+
+        if (!data.isPresent()) {
             Helper.pm(sender, "Errors.player-not-found", true);
             return;
         }
