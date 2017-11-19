@@ -34,7 +34,7 @@ public class AcceptCommand extends SubCommand {
 			return;
 		}
 
-		Player target = Bukkit.getPlayerExact(args[1]);
+		Player target = Bukkit.getPlayer(args[1]);
 
 		if (target == null) {
 			Helper.pm(sender, "Errors.player-not-found", true);

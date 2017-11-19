@@ -28,7 +28,7 @@ public class SpectateCommand extends BaseCommand {
             return;
         }
 
-        Player target = Bukkit.getPlayerExact(args[0]);
+        Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null) {
             Helper.pm(sender, "Errors.player-not-found", true);

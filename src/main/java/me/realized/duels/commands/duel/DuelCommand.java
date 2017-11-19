@@ -86,7 +86,7 @@ public class DuelCommand extends BaseCommand {
 			return;
 		}
 
-		Player target = Bukkit.getPlayerExact(args[0].replace("-", ""));
+		Player target = Bukkit.getPlayer(args[0]);
 
 		if (target == null) {
 			Helper.pm(sender, "Errors.player-not-found", true);
