@@ -17,6 +17,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.io.*;
+import java.sql.Connection;
 import java.util.*;
 
 public class DataManager implements Listener, Reloadable {
@@ -39,7 +40,13 @@ public class DataManager implements Listener, Reloadable {
 	public void load() {
 		users.clear();
 
-		DuelsDAO.createDuelsTable(connection.getConnection());
+		Connection connection = this.connection.getConnection();
+
+		if (connection == null) {
+			this.connection.connect();
+		}
+
+		DuelsDAO.createDuelsTable(connection);
 
 		File lobby = new File(instance.getDataFolder(), "lobby.json");
 
@@ -67,19 +74,23 @@ public class DataManager implements Listener, Reloadable {
 		Bukkit.getScheduler().runTaskAsynchronously(instance, new Runnable() {
 			@Override
 			public void run() {
-				if (Bukkit.getOfflinePlayer(uuid).hasPlayedBefore()) {
-					Optional<UserData> userData = DuelsDAO.fetchUser(connection.getConnection(), uuid);
+				Connection connection = DataManager.this.connection.getConnection();
 
-					if (userData.isPresent()) {
-						users.put(uuid, userData.get());
-					}
-					else {
-						UserData user = new UserData(uuid);
-						users.put(uuid, user);
+				if (connection == null) {
+					DataManager.this.connection.connect();
+				}
 
-						UserCreateEvent event = new UserCreateEvent(user);
-						Bukkit.getPluginManager().callEvent(event);
-					}
+				Optional<UserData> userData = DuelsDAO.fetchUser(connection, uuid);
+
+				if (userData.isPresent()) {
+					users.put(uuid, userData.get());
+				}
+				else {
+					UserData user = new UserData(uuid);
+					users.put(uuid, user);
+
+					UserCreateEvent event = new UserCreateEvent(user);
+					Bukkit.getPluginManager().callEvent(event);
 				}
 			}
 		});
@@ -96,7 +107,13 @@ public class DataManager implements Listener, Reloadable {
 			Bukkit.getScheduler().runTaskAsynchronously(instance, new Runnable() {
 				@Override
 				public void run() {
-					DuelsDAO.saveUser(connection.getConnection(), data.getUUID(), data.getWins(), data.getLosses());
+					Connection connection = DataManager.this.connection.getConnection();
+
+					if (connection == null) {
+						DataManager.this.connection.connect();
+					}
+
+					DuelsDAO.saveUser(connection, data.getUUID(), data.getWins(), data.getLosses());
 				}
 			});
 		}
