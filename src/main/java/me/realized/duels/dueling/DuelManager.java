@@ -4,7 +4,10 @@ import me.realized.duels.Core;
 import me.realized.duels.arena.Arena;
 import me.realized.duels.arena.ArenaManager;
 import me.realized.duels.configuration.MainConfig;
-import me.realized.duels.data.*;
+import me.realized.duels.data.DataManager;
+import me.realized.duels.data.PlayerData;
+import me.realized.duels.data.PlayerManager;
+import me.realized.duels.data.UserData;
 import me.realized.duels.event.MatchEndEvent;
 import me.realized.duels.event.MatchStartEvent;
 import me.realized.duels.event.RequestSendEvent;
@@ -14,6 +17,7 @@ import me.realized.duels.kits.KitManager;
 import me.realized.duels.utilities.Helper;
 import me.realized.duels.utilities.Storage;
 import me.realized.duels.utilities.location.Teleport;
+import net.minelink.ctplus.CombatTagPlus;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.FireworkEffect;
@@ -30,7 +34,10 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.logging.Level;
 
 public class DuelManager implements Listener {
@@ -314,6 +321,9 @@ public class DuelManager implements Listener {
 
 			Location to = data.getLocation();
 
+			CombatTagPlus.getPlugin(CombatTagPlus.class).getTagManager().untag(target.getUniqueId());
+			Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "spawn " + target.getName());
+			/*
 			if (!teleport.isAuthorizedFor(target, to)) {
 				target.setHealth(0.0D);
 				Helper.pm(target, "&4Teleportation failed! You were killed to prevent staying in the arena.", false);
@@ -322,7 +332,7 @@ public class DuelManager implements Listener {
 				teleport.teleportPlayer(target, to);
 			}
 
-			essentialsHook.setBackLocation(target, to);
+			essentialsHook.setBackLocation(target, to); */
 			mcMMOHook.enableSkills(target);
 
 			// Since this player is confirmed alive, no need to handle faction power loss stuff

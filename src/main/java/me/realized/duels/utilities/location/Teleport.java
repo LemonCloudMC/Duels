@@ -72,4 +72,5 @@ public class Teleport implements Listener {
         event.setTo((Location) value);
         event.setCancelled(false);
     }
+
 }
